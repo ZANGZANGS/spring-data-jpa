@@ -1,6 +1,7 @@
 package study.datajpa.repository;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +22,7 @@ class MemberRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
 
-    @Autowired
+    @PersistenceContext
     EntityManager em;
 
     @Test
