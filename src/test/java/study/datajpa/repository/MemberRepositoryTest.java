@@ -66,4 +66,21 @@ class MemberRepositoryTest {
         //삭제 검증
     }
 
+    @Test
+    @DisplayName("findByUsernameAndAgeGreaterThen")
+    public void findByUsernameAndAgeGreaterThen(){
+        //given
+        Member m1 = new Member("AAA", 10);
+        Member m2 = new Member("AAA", 20);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+
+        //when
+        List<Member> result = memberRepository.findByUsernameAndAgeGreaterThan("AAA", 15);
+        //then
+
+        assertThat(result.get(0).getUsername()).isEqualTo("AAA");
+        assertThat(result.get(0).getAge()).isEqualTo(20);
+        assertThat(result.size()).isEqualTo(1);
+    }
 }
