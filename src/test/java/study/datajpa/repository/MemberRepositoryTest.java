@@ -14,6 +14,7 @@ import study.datajpa.entity.Team;
 
 import javax.swing.text.html.parser.Entity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -137,6 +138,26 @@ class MemberRepositoryTest {
         List<MemberDto> memberDto = memberRepository.findMemberDtoList();
         for (MemberDto dto : memberDto) {
             System.out.println("dto =" + dto);
+        }
+
+    }
+
+    @Test
+    public void inQuery(){
+        //given
+        Member m1 = new Member("AAA", 10);
+        Member m2 = new Member("BBB", 20);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+
+        List<String> names = new ArrayList<>();
+        names.add("AAA");
+        names.add("BBB");
+        names.add("CCC");
+
+        List<Member> members = memberRepository.findBynNames(names);
+        for (Member member : members) {
+            System.out.println("member =" + member);
         }
 
         //when
