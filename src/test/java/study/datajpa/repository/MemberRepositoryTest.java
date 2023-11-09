@@ -1,5 +1,6 @@
 package study.datajpa.repository;
 
+import ch.qos.logback.core.testUtil.XTeeOutputStream;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
@@ -159,6 +160,27 @@ class MemberRepositoryTest {
         for (Member member : members) {
             System.out.println("member =" + member);
         }
+
+        //when
+
+        //then
+    }
+
+    @Test
+    public void returnType(){
+        //given
+        Member m1 = new Member("AAA", 10);
+        Member m2 = new Member("BBB", 20);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+
+        List<Member> result = memberRepository.findListByUsername("BBBA"); //컬렉션
+
+        System.out.println("result = "+ result.size());
+        System.out.println("result is empty =" + result.isEmpty()); // <- empty Collection을 보장한다. Good!!
+
+        Member aaa = memberRepository.findMemberByUsername("AAA");
+        Optional<Member> aaa1 = memberRepository.findOptionalByUsername("AAA");
 
         //when
 
