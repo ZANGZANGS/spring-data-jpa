@@ -112,7 +112,7 @@ class MemberJpaRepositoryTest {
 
         //then
         assertThat(totalCount).isEqualTo(5);
-        assertThat(members.size()).isEqualTo(offset);
+        assertThat(members.size()).isEqualTo(3);
 
     }
 }

@@ -67,8 +67,8 @@ public class MemberJpaRepository {
     }
 
     public long totalCount(int age) {
-        return em.createQuery("select m from Member m where m.age = :age", Long.class)
+        return em.createQuery("select count(m) from Member m where m.age = :age", Long.class)
                 .setParameter("age", age)
-                .getFirstResult();
+                .getSingleResult();
     }
 }
