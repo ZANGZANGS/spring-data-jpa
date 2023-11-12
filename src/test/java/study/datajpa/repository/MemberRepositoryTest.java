@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
@@ -231,6 +232,34 @@ class MemberRepositoryTest {
         assertThat(page.isFirst()).isTrue();
         assertThat(page.hasNext()).isTrue();
 
+    }
+
+    @Test
+    @DisplayName("bulk")
+    @Rollback(value = false)
+    public void 벌크업데이트(){
+        //given
+        memberRepository.save(new Member("member1", 10));
+        memberRepository.save(new Member("member2", 19));
+        memberRepository.save(new Member("member3", 20));
+        memberRepository.save(new Member("member4", 21));
+        memberRepository.save(new Member("member5", 40));
+
+
+        //when
+        int bulkResultCount = memberRepository.bulkAgePlus(20);
+        /**
+         * 벌크연산은 영속성 컨텍스트를 거치지 않고 직접 DB에 트랜잭션을 날린다.
+         * 따라서, 벌크 연산 이후에는 영속성 컨텍스트를 초기화 해줘야만 DB와 동일한 데이터로 맞춰진다.
+         * @Modifying(clearAutomatically = true 옵션을 추가해도 동일하게 동작한다.
+         */
+        //em.clear();
+
+        Member member5 = memberRepository.findByUsername("member5");
+        System.out.println("member5 =" + member5);
+
+        //then
+        assertThat(bulkResultCount).isEqualTo(3);
     }
 
 }
