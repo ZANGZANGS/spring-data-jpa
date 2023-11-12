@@ -319,4 +319,16 @@ class MemberRepositoryTest {
 
         //then
     }
+    @Test
+    @DisplayName("커스텀_레포지터리")
+    public void 커스텀_레포지터리(){
+        //given
+        Member member1 = memberRepository.save(new Member("member1", 10));
+        em.flush();
+        em.clear();
+        List<Member> memberCustom = memberRepository.findMemberCustom();
+        //when
+
+        //then
+    }
 }
