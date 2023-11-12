@@ -286,4 +286,37 @@ class MemberRepositoryTest {
 
         //then
     }
+    
+    @Test
+    @DisplayName("queryHint")
+    public void queryHint(){
+        //given
+        Member member1 = memberRepository.save(new Member("member1", 10));
+        em.flush();
+        em.clear();
+        //when
+//        Member findMember = memberRepository.findById(member1.getId()).get();
+//        findMember.setUsername("member2");
+
+        Member findMember = memberRepository.findReadOnlyByUsername("member1");
+        findMember.setUsername("member2"); //read only 이므로 변경감지가 일어나지 않는다.
+
+        em.flush();
+
+        //then
+    }
+
+    @Test
+    @DisplayName("lock")
+    public void lock(){
+        //given
+        memberRepository.save(new Member("member1", 10));
+        em.flush();
+        em.clear();
+
+        List<Member> members = memberRepository.findLockByUsername("member1");
+        //when
+
+        //then
+    }
 }
