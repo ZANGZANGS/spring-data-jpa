@@ -8,7 +8,7 @@ import lombok.*;
 @Setter //엔티티에서 setter는 가급적 사용 자제
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 //@ToString(of = {"id","username","age","team"})
-public class Member {
+public class Member extends BaseEntity{
 
     @Id @GeneratedValue
     @Column(name = "member_id")
