@@ -3,6 +3,7 @@ package study.datajpa.repository;
 import ch.qos.logback.core.testUtil.XTeeOutputStream;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +27,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.shouldHaveThrown;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -40,8 +41,7 @@ class MemberRepositoryTest {
     @PersistenceContext
     EntityManager em;
 
-    @Test
-    public void testMember(){
+    @Test    public void testMember(){
         System.out.println("memberRepository =" +memberRepository.getClass());
         Member member = new Member("장장스");
         Member savedMember = memberRepository.save(member);
@@ -330,5 +330,26 @@ class MemberRepositoryTest {
         //when
 
         //then
+    }
+
+    @Test
+    @DisplayName("spec테스트")
+    public void spec테스트(){
+        //given
+        Team teamA = teamRepository.save(new Team("teamA"));
+
+        Member m1 = memberRepository.save(new Member("m1",10, teamA));
+        Member m2 = memberRepository.save(new Member("m2",10, teamA));
+
+        em.flush();
+        em.clear();
+
+        //when
+        Specification<Member> spec = MemberSpec.username("m1").and(MemberSpec.teamName("teamA"));
+        List<Member> all = memberRepository.findAll(spec);
+
+        assertThat(all.size()).isEqualTo(1);
+
+
     }
 }
