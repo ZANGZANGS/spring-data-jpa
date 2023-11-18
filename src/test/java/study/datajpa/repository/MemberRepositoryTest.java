@@ -1,30 +1,24 @@
 package study.datajpa.repository;
 
-import ch.qos.logback.core.testUtil.XTeeOutputStream;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
 import study.datajpa.entity.Team;
 
-import javax.swing.text.html.parser.Entity;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -373,6 +367,36 @@ class MemberRepositoryTest {
         assertThat(result.get(0).getUsername()).isEqualTo("m1");
 
 
+
+    }
+
+    @Test
+    @DisplayName("projection")
+    public void projection(){
+        //given
+        Team teamA = teamRepository.save(new Team("teamA"));
+
+        Member m1 = memberRepository.save(new Member("m1",10, teamA));
+        Member m2 = memberRepository.save(new Member("m2",10, teamA));
+
+        em.flush();
+        em.clear();
+
+        //when
+        //동작하지 않음;;
+        List<UsernameOnlyDto> result = memberRepository.findProjectionsByUsername("m1", UsernameOnlyDto.class);
+
+        for (UsernameOnlyDto usernameOnlyDto : result) {
+            System.out.println( " ====> " +usernameOnlyDto.getUsername());
+        }
+
+
+       List<NestedClosedProjections> result2 = memberRepository.findProjectionsByUsername("m1", NestedClosedProjections.class);
+
+        for (NestedClosedProjections obj : result2) {
+            System.out.println( " ====> " +obj.getUsername());
+            System.out.println( " ====> " +obj.getTeam().getName());
+        }
 
     }
 }
